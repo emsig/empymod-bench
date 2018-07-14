@@ -1,0 +1,516 @@
+{
+    "kernel.Core.time_fields": {
+        "code": "class Core:\n    def time_fields(self, size):\n        kernel.fields(**self.fields)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':  # Total size: 5*1*1*1 = 5\n            freq = np.array([1])\n            off = np.array([500.])\n            base = np.array([1])\n        else:          # Total size: 5*100*100*201 = 10'050'000\n            freq = np.logspace(-2, 2, 100)\n            off = np.arange(1, 101)*200.\n            base = filters.key_201_2009().base\n    \n        # Define survey\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        use_ne_eval = False\n        xdirect = False\n        TM = True\n    \n        # Calculate eta, zeta, wavenumber, Gamma\n        etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n        etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq, epermV*epsilon_0)\n        zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n        zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n        lambd = base/off[:, None]\n        Gam = np.sqrt((etaH/etaV)[:, None, :, None] *\n                      (lambd*lambd)[None, :, None, :] +\n                      (zetaH*etaH)[:, None, :, None])\n    \n        # Collect input for kernel.greenfct()\n        self.green_wave = {'zsrc': zsrc, 'zrec': zrec, 'lsrc': lsrc,\n                           'lrec': lrec, 'depth': depth, 'etaH': etaH,\n                           'etaV': etaV, 'zetaH': zetaH, 'zetaV': zetaV,\n                           'lambd': lambd, 'ab': ab, 'xdirect': xdirect,\n                           'msrc': msrc, 'mrec': mrec,\n                           'use_ne_eval': use_ne_eval}\n    \n        # Collect input for kernel.reflections()\n        self.reflection = {'depth': depth, 'e_zH': etaH, 'Gam': Gam, 'lrec':\n                           lrec, 'lsrc': lsrc, 'use_ne_eval': use_ne_eval}\n    \n        # Calculate plus/minus reflection coefficients\n        Rp, Rm = kernel.reflections(**self.reflection)\n    \n        # Collect input for kernel.fields()\n        self.fields = {'depth': depth, 'Gam': Gam, 'lrec': lrec, 'lsrc': lsrc,\n                       'Rp': Rp, 'Rm': Rm, 'zsrc': zsrc, 'ab': ab, 'TM': TM,\n                       'use_ne_eval': use_ne_eval}",
+        "name": "kernel.Core.time_fields",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "824d08a39d3bd483fadc4055bd0f8b2974c322eb932f9baa785d9a75887274a2",
+        "warmup_time": -1
+    },
+    "kernel.Core.time_greenfct": {
+        "code": "class Core:\n    def time_greenfct(self, size):\n        kernel.greenfct(**self.green_wave)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':  # Total size: 5*1*1*1 = 5\n            freq = np.array([1])\n            off = np.array([500.])\n            base = np.array([1])\n        else:          # Total size: 5*100*100*201 = 10'050'000\n            freq = np.logspace(-2, 2, 100)\n            off = np.arange(1, 101)*200.\n            base = filters.key_201_2009().base\n    \n        # Define survey\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        use_ne_eval = False\n        xdirect = False\n        TM = True\n    \n        # Calculate eta, zeta, wavenumber, Gamma\n        etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n        etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq, epermV*epsilon_0)\n        zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n        zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n        lambd = base/off[:, None]\n        Gam = np.sqrt((etaH/etaV)[:, None, :, None] *\n                      (lambd*lambd)[None, :, None, :] +\n                      (zetaH*etaH)[:, None, :, None])\n    \n        # Collect input for kernel.greenfct()\n        self.green_wave = {'zsrc': zsrc, 'zrec': zrec, 'lsrc': lsrc,\n                           'lrec': lrec, 'depth': depth, 'etaH': etaH,\n                           'etaV': etaV, 'zetaH': zetaH, 'zetaV': zetaV,\n                           'lambd': lambd, 'ab': ab, 'xdirect': xdirect,\n                           'msrc': msrc, 'mrec': mrec,\n                           'use_ne_eval': use_ne_eval}\n    \n        # Collect input for kernel.reflections()\n        self.reflection = {'depth': depth, 'e_zH': etaH, 'Gam': Gam, 'lrec':\n                           lrec, 'lsrc': lsrc, 'use_ne_eval': use_ne_eval}\n    \n        # Calculate plus/minus reflection coefficients\n        Rp, Rm = kernel.reflections(**self.reflection)\n    \n        # Collect input for kernel.fields()\n        self.fields = {'depth': depth, 'Gam': Gam, 'lrec': lrec, 'lsrc': lsrc,\n                       'Rp': Rp, 'Rm': Rm, 'zsrc': zsrc, 'ab': ab, 'TM': TM,\n                       'use_ne_eval': use_ne_eval}",
+        "name": "kernel.Core.time_greenfct",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "90b1813de19d27383ac31a38ffba5240c5ee19a202a7639dea82c821cefbba29",
+        "warmup_time": -1
+    },
+    "kernel.Core.time_reflections": {
+        "code": "class Core:\n    def time_reflections(self, size):\n        kernel.reflections(**self.reflection)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':  # Total size: 5*1*1*1 = 5\n            freq = np.array([1])\n            off = np.array([500.])\n            base = np.array([1])\n        else:          # Total size: 5*100*100*201 = 10'050'000\n            freq = np.logspace(-2, 2, 100)\n            off = np.arange(1, 101)*200.\n            base = filters.key_201_2009().base\n    \n        # Define survey\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        use_ne_eval = False\n        xdirect = False\n        TM = True\n    \n        # Calculate eta, zeta, wavenumber, Gamma\n        etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n        etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq, epermV*epsilon_0)\n        zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n        zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n        lambd = base/off[:, None]\n        Gam = np.sqrt((etaH/etaV)[:, None, :, None] *\n                      (lambd*lambd)[None, :, None, :] +\n                      (zetaH*etaH)[:, None, :, None])\n    \n        # Collect input for kernel.greenfct()\n        self.green_wave = {'zsrc': zsrc, 'zrec': zrec, 'lsrc': lsrc,\n                           'lrec': lrec, 'depth': depth, 'etaH': etaH,\n                           'etaV': etaV, 'zetaH': zetaH, 'zetaV': zetaV,\n                           'lambd': lambd, 'ab': ab, 'xdirect': xdirect,\n                           'msrc': msrc, 'mrec': mrec,\n                           'use_ne_eval': use_ne_eval}\n    \n        # Collect input for kernel.reflections()\n        self.reflection = {'depth': depth, 'e_zH': etaH, 'Gam': Gam, 'lrec':\n                           lrec, 'lsrc': lsrc, 'use_ne_eval': use_ne_eval}\n    \n        # Calculate plus/minus reflection coefficients\n        Rp, Rm = kernel.reflections(**self.reflection)\n    \n        # Collect input for kernel.fields()\n        self.fields = {'depth': depth, 'Gam': Gam, 'lrec': lrec, 'lsrc': lsrc,\n                       'Rp': Rp, 'Rm': Rm, 'zsrc': zsrc, 'ab': ab, 'TM': TM,\n                       'use_ne_eval': use_ne_eval}",
+        "name": "kernel.Core.time_reflections",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "bd5655a864902955302c0e2e0b80b6e1f526b4064795c1407c6b221ac0f57f5b",
+        "warmup_time": -1
+    },
+    "kernel.Core.time_wavenumber": {
+        "code": "class Core:\n    def time_wavenumber(self, size):\n        kernel.wavenumber(**self.green_wave)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':  # Total size: 5*1*1*1 = 5\n            freq = np.array([1])\n            off = np.array([500.])\n            base = np.array([1])\n        else:          # Total size: 5*100*100*201 = 10'050'000\n            freq = np.logspace(-2, 2, 100)\n            off = np.arange(1, 101)*200.\n            base = filters.key_201_2009().base\n    \n        # Define survey\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        use_ne_eval = False\n        xdirect = False\n        TM = True\n    \n        # Calculate eta, zeta, wavenumber, Gamma\n        etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n        etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq, epermV*epsilon_0)\n        zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n        zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n        lambd = base/off[:, None]\n        Gam = np.sqrt((etaH/etaV)[:, None, :, None] *\n                      (lambd*lambd)[None, :, None, :] +\n                      (zetaH*etaH)[:, None, :, None])\n    \n        # Collect input for kernel.greenfct()\n        self.green_wave = {'zsrc': zsrc, 'zrec': zrec, 'lsrc': lsrc,\n                           'lrec': lrec, 'depth': depth, 'etaH': etaH,\n                           'etaV': etaV, 'zetaH': zetaH, 'zetaV': zetaV,\n                           'lambd': lambd, 'ab': ab, 'xdirect': xdirect,\n                           'msrc': msrc, 'mrec': mrec,\n                           'use_ne_eval': use_ne_eval}\n    \n        # Collect input for kernel.reflections()\n        self.reflection = {'depth': depth, 'e_zH': etaH, 'Gam': Gam, 'lrec':\n                           lrec, 'lsrc': lsrc, 'use_ne_eval': use_ne_eval}\n    \n        # Calculate plus/minus reflection coefficients\n        Rp, Rm = kernel.reflections(**self.reflection)\n    \n        # Collect input for kernel.fields()\n        self.fields = {'depth': depth, 'Gam': Gam, 'lrec': lrec, 'lsrc': lsrc,\n                       'Rp': Rp, 'Rm': Rm, 'zsrc': zsrc, 'ab': ab, 'TM': TM,\n                       'use_ne_eval': use_ne_eval}",
+        "name": "kernel.Core.time_wavenumber",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "7ed84aaa6e866c476bf82eb966d6a6d2d6e04df24cb302b7371a6b5a7af7edbf",
+        "warmup_time": -1
+    },
+    "model.Analytical.time_analytical": {
+        "code": "class Analytical:\n    def time_analytical(self, solution):\n        model.analytical(**self.hsfs_inp)\n\n    def setup(self, solution):\n        if solution == 'dfs':\n            signal = 0\n        else:\n            signal = None\n    \n        self.hsfs_inp = {\n                'src': [0, 0, 0],\n                'rec': [np.arange(1, 101)*200, np.zeros(100), 0],\n                'res': 3.5,\n                'freqtime': np.logspace(-2, 2, 101),\n                'signal': signal,\n                'solution': solution,\n                'verb': 0}",
+        "name": "model.Analytical.time_analytical",
+        "number": 0,
+        "param_names": [
+            "solution"
+        ],
+        "params": [
+            [
+                "'fs'",
+                "'dhs'",
+                "'dfs'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "b07b2319ed2d72709b609713b1ba9e4ab118e013c11069916485523a4d57c64a",
+        "warmup_time": -1
+    },
+    "model.Bipole.time_bipole_freq": {
+        "code": "class Bipole:\n    def time_bipole_freq(self):\n        model.bipole(\n                src=[[-50, 0], [0, 30],\n                     [0, 10], [5, 50],\n                     [970, 999], [980, 990]],\n                rec=[[2000, 3000], [2100, 3200],\n                     [0, 200], [100, 400],\n                     [960, 970], [950, 1000]],\n                depth=[0, 1000, 2000, 2100],\n                res=[2e14, 0.3, 1, 100, 1],\n                freqtime=[0.1, 1.0, 10.],\n                srcpts=5, recpts=5, strength=1000,\n                htarg='key_201_2009',\n                xdirect=False, verb=0)",
+        "name": "model.Bipole.time_bipole_freq",
+        "number": 0,
+        "param_names": [],
+        "params": [],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "414d97927480f2926fc51bd7f1310f10bf90c288c52c05ca8ed06adda5325700",
+        "warmup_time": -1
+    },
+    "model.Bipole.time_bipole_time": {
+        "code": "class Bipole:\n    def time_bipole_time(self):\n        model.bipole(\n                src=[0, 0, 950, 10, 30],\n                rec=[3000, 100, 1000, 5, 7],\n                depth=[0, 1000, 2000, 2100],\n                res=[2e14, 0.3, 1, 100, 1],\n                freqtime=[0.1, 1.0, 10.],\n                htarg='key_201_2009',\n                srcpts=1, recpts=1, strength=0,\n                signal=-1, xdirect=False, verb=0)",
+        "name": "model.Bipole.time_bipole_time",
+        "number": 0,
+        "param_names": [],
+        "params": [],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "92ab32d881b945c9282007684024d61cccfc76b36236d9fe6f2e14a06febb400",
+        "warmup_time": -1
+    },
+    "model.Dipole.time_dipole_freq": {
+        "code": "class Dipole:\n    def time_dipole_freq(self, loop):\n        self.freq(rec=[np.arange(1, 21)*300, np.zeros(20), 1000],\n                  **self.fmodel)\n\n    def setup(self, loop):\n        self.model = {\n                'src': [0, 0, 990],\n                'depth': [0, 1000, 2000, 2100],\n                'res': [2e14, 0.3, 1, 100, 1],\n                'xdirect': False,\n                'htarg': 'key_201_2009',\n                'opt': None,\n                'loop': loop,\n                'verb': 0}\n    \n        self.freqtime = np.logspace(-2, 2, 21)\n        self.fmodel = dc(self.model)\n        self.tmodel = dc(self.model)\n    \n        # Till c73d6647 (btw. v1.0.0 and v1.1.0) there were the routines\n        # `frequency` and `time`, which were later merged into `dipole`.\n        try:\n            # Test\n            model.dipole([0, 0, 1], [10, 0, 2], [], 1, 1, verb=0)\n            # Frequency\n            self.freq = model.dipole\n            self.fmodel['freqtime'] = self.freqtime\n            # Time\n            self.time = model.dipole\n            self.tmodel['freqtime'] = self.freqtime\n        except VariableCatch:\n            # Frequency\n            self.freq = model.frequency\n            self.fmodel['freq'] = self.freqtime\n            # Time\n            self.time = model.time\n            self.tmodel['time'] = self.freqtime",
+        "name": "model.Dipole.time_dipole_freq",
+        "number": 0,
+        "param_names": [
+            "loop"
+        ],
+        "params": [
+            [
+                "None",
+                "'freq'",
+                "'off'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "e4363dd7ed9f2b6c5b5ba91c923d79ba7eefb784db2870554311ff91e6460399",
+        "warmup_time": -1
+    },
+    "model.Dipole.time_dipole_time": {
+        "code": "class Dipole:\n    def time_dipole_time(self, loop):\n        self.time(rec=[np.arange(1, 4)*1000, np.zeros(3), 1000],\n                  signal=0, **self.tmodel)\n\n    def setup(self, loop):\n        self.model = {\n                'src': [0, 0, 990],\n                'depth': [0, 1000, 2000, 2100],\n                'res': [2e14, 0.3, 1, 100, 1],\n                'xdirect': False,\n                'htarg': 'key_201_2009',\n                'opt': None,\n                'loop': loop,\n                'verb': 0}\n    \n        self.freqtime = np.logspace(-2, 2, 21)\n        self.fmodel = dc(self.model)\n        self.tmodel = dc(self.model)\n    \n        # Till c73d6647 (btw. v1.0.0 and v1.1.0) there were the routines\n        # `frequency` and `time`, which were later merged into `dipole`.\n        try:\n            # Test\n            model.dipole([0, 0, 1], [10, 0, 2], [], 1, 1, verb=0)\n            # Frequency\n            self.freq = model.dipole\n            self.fmodel['freqtime'] = self.freqtime\n            # Time\n            self.time = model.dipole\n            self.tmodel['freqtime'] = self.freqtime\n        except VariableCatch:\n            # Frequency\n            self.freq = model.frequency\n            self.fmodel['freq'] = self.freqtime\n            # Time\n            self.time = model.time\n            self.tmodel['time'] = self.freqtime",
+        "name": "model.Dipole.time_dipole_time",
+        "number": 0,
+        "param_names": [
+            "loop"
+        ],
+        "params": [
+            [
+                "None",
+                "'freq'",
+                "'off'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "9e6f664a0f8d1e3a7fe52ea00d9f49935e66a4b3eb8b1077d8b42e3482fe5a7f",
+        "warmup_time": -1
+    },
+    "model.Various.time_dipole_difflsrclrec_42": {
+        "code": "class Various:\n    def time_dipole_difflsrclrec_42(self):\n        # First arguments without name, for backwards comp. with `frequency`\n        self.func([0, 0, -20],             # src\n                  [np.arange(1, 11)*600, np.zeros(10), 100],  # rec\n                  [0, 50],                 # Depth\n                  [2e14, 10, 1],           # Resistivities\n                  np.logspace(-2, 2, 11),  # Frequencies\n                  aniso=[1, 2, 0.5], ab=42, xdirect=False,\n                  htarg='key_101_2009', verb=0)\n\n    def setup(self):\n    \n        # Till c73d6647 (btw. v1.0.0 and v1.1.0) there were the routines\n        # `frequency` and `time`, which were later merged into `dipole`.\n        try:\n            model.dipole([0, 0, 1], [10, 0, 2], [], 1, 1, verb=0)\n            self.func = model.dipole\n        except VariableCatch:\n            self.func = model.frequency",
+        "name": "model.Various.time_dipole_difflsrclrec_42",
+        "number": 0,
+        "param_names": [],
+        "params": [],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "a5c9439610c9ccd50ffcd444fe9d16b1f1e34705df092690f7a0ebcf6eedf7a3",
+        "warmup_time": -1
+    },
+    "model.Various.time_dipole_highfreq_11": {
+        "code": "class Various:\n    def time_dipole_highfreq_11(self):\n        # First arguments without name, for backwards comp. with `frequency`\n        self.func([0, 0, 2],              # src\n                  [np.arange(1, 11), np.arange(1, 11)/4, 3],  # rec\n                  [0, 10],                # Depth\n                  [2e14, 10, 100],        # Resistivities\n                  np.logspace(6, 8, 11),  # Frequencies\n                  aniso=[1, 2, 0.5], ab=11, epermH=[1, 80, 5],\n                  epermV=[1, 40, 10], mpermH=[1, 1, 4], mpermV=[1, 2, 0.5],\n                  xdirect=False, htarg='key_401_2009', verb=0)\n\n    def setup(self):\n    \n        # Till c73d6647 (btw. v1.0.0 and v1.1.0) there were the routines\n        # `frequency` and `time`, which were later merged into `dipole`.\n        try:\n            model.dipole([0, 0, 1], [10, 0, 2], [], 1, 1, verb=0)\n            self.func = model.dipole\n        except VariableCatch:\n            self.func = model.frequency",
+        "name": "model.Various.time_dipole_highfreq_11",
+        "number": 0,
+        "param_names": [],
+        "params": [],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "a2d217ae72706761592e79197d36a97ea195dbb96120794075dd014c898b2893",
+        "warmup_time": -1
+    },
+    "model.Various.time_dipole_land_angle_16": {
+        "code": "class Various:\n    def time_dipole_land_angle_16(self):\n        # First arguments without name, for backwards comp. with `frequency`\n        self.func([0, 0, 1e-5],            # src\n                  [np.arange(1, 11)*600, np.arange(1, 11)*400, 1e-5],  # rec\n                  0,                       # Depth\n                  [2e14, 10],              # Resistivities\n                  np.logspace(-2, 2, 11),  # Frequencies\n                  ab=16, epermH=[0, 1], epermV=[0, 1], xdirect=False,\n                  htarg='key_101_2009', verb=0)\n\n    def setup(self):\n    \n        # Till c73d6647 (btw. v1.0.0 and v1.1.0) there were the routines\n        # `frequency` and `time`, which were later merged into `dipole`.\n        try:\n            model.dipole([0, 0, 1], [10, 0, 2], [], 1, 1, verb=0)\n            self.func = model.dipole\n        except VariableCatch:\n            self.func = model.frequency",
+        "name": "model.Various.time_dipole_land_angle_16",
+        "number": 0,
+        "param_names": [],
+        "params": [],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "3825aabf9a84187d839b65f948f34e9b74ddab54c35ae11f3597a4f27e34a99a",
+        "warmup_time": -1
+    },
+    "model.Various.time_dipole_marine_angle_12": {
+        "code": "class Various:\n    def time_dipole_marine_angle_12(self):\n        # First arguments without name, for backwards comp. with `frequency`\n        self.func([0, 0, 990],             # src\n                  [np.arange(1, 11)*600, np.arange(1, 11)*400, 1000],  # rec\n                  [0, 1000],               # Depths\n                  [2e14, 0.3, 1],          # Resistivities\n                  np.logspace(-2, 2, 11),  # Frequencies\n                  ab=12, xdirect=False, htarg='key_101_2009', verb=0)\n\n    def setup(self):\n    \n        # Till c73d6647 (btw. v1.0.0 and v1.1.0) there were the routines\n        # `frequency` and `time`, which were later merged into `dipole`.\n        try:\n            model.dipole([0, 0, 1], [10, 0, 2], [], 1, 1, verb=0)\n            self.func = model.dipole\n        except VariableCatch:\n            self.func = model.frequency",
+        "name": "model.Various.time_dipole_marine_angle_12",
+        "number": 0,
+        "param_names": [],
+        "params": [],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "3fb21cf634bd44e5daf61b7e681e9381368bc5f78d1f43420d6322cac474e14a",
+        "warmup_time": -1
+    },
+    "transform.Dlf.time_dlf": {
+        "code": "class Dlf:\n    def time_dlf(self, size, htype):\n        transform.dlf(**self.dlf)\n\n    def setup(self, size, htype):\n    \n        # One big, one small model\n        if size == 'Small':  # Total size: 5*1*1*1 = 5\n            x = np.array([500.])\n        else:          # Total size: 5*100*100*201 = 10'050'000\n            x = np.arange(1, 101)*200.\n    \n        # Define model parameters\n        freq = np.array([1])\n        src = [0, 0, 250]\n        rec = [x, np.zeros(x.shape), 300]\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        ab = 11\n        xdirect = False\n        verb = 0\n        use_ne_eval = False\n    \n        # Checks (since DLF exists the `utils`-checks haven't changed, so we\n        # just use them here.\n        model = utils.check_model(depth, res, None, None, None, None, None,\n                                  xdirect, verb)\n        depth, res, aniso, epermH, epermV, mpermH, mpermV, _ = model\n        frequency = utils.check_frequency(freq, res, aniso, epermH, epermV,\n                                          mpermH, mpermV, verb)\n        freq, etaH, etaV, zetaH, zetaV = frequency\n        ab, msrc, mrec = utils.check_ab(ab, verb)\n        src, nsrc = utils.check_dipole(src, 'src', verb)\n        rec, nrec = utils.check_dipole(rec, 'rec', verb)\n        off, angle = utils.get_off_ang(src, rec, nsrc, nrec, verb)\n        lsrc, zsrc = utils.get_layer_nr(src, depth)\n        lrec, zrec = utils.get_layer_nr(rec, depth)\n    \n        # pts_per_dec depending on htype\n        if htype == 'Lagged':\n            pts_per_dec = -1\n        elif htype == 'Splined':\n            pts_per_dec = 10\n        else:\n            pts_per_dec = 0\n    \n        # HT arguments\n        _, fhtarg = utils.check_hankel('fht', ['key_201_2009', pts_per_dec], 0)\n    \n        # Calculate kernels for dlf\n        lambd, _ = transform.get_spline_values(fhtarg[0], off, fhtarg[1])\n        PJ = kernel.wavenumber(zsrc, zrec, lsrc, lrec, depth, etaH, etaV,\n                               zetaH, zetaV, lambd, ab, xdirect, msrc, mrec,\n                               use_ne_eval)\n        factAng = kernel.angle_factor(angle, ab, msrc, mrec)\n    \n        # Signature changed at commit a15af07 (20/05/2018; before v1.6.2)\n        try:\n            dlf = {'signal': PJ, 'points': lambd, 'out_pts': off,\n                   'filt': fhtarg[0], 'pts_per_dec': fhtarg[1],\n                   'factAng': factAng, 'ab': ab}\n            transform.dlf(**dlf)\n        except VariableCatch:\n            dlf = {'signal': PJ, 'points': lambd, 'out_pts': off,\n                   'targ': fhtarg, 'factAng': factAng}\n    \n        self.dlf = dlf",
+        "name": "transform.Dlf.time_dlf",
+        "number": 0,
+        "param_names": [
+            "size",
+            "htype"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ],
+            [
+                "'Standard'",
+                "'Lagged'",
+                "'Splined'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "ff2268854f87bcacc33300fb8b2689b5fcdc3ece796c473b0efdd89fc927f2c3",
+        "warmup_time": -1
+    },
+    "transform.Fourier.time_ffht_lagged": {
+        "code": "class Fourier:\n    def time_ffht_lagged(self, size):\n        self.ffht_calc(*self.ffht_la)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':\n            freqtime = np.array([2.])\n        else:\n            freqtime = np.logspace(-1, 1, 11)\n    \n        # Define survey\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        angle = np.array([0])\n        off = np.array([5000])\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        verb = 0\n        use_ne_eval = False\n        loop_freq = True\n        loop_off = False\n        signal = 0\n    \n        # `pts_per_dec` changed at 9bed72b0 (29/04/2018; bef. v1.4.1)\n        try:\n            ht, htarg = utils.check_hankel('fht', ['', -1], verb)\n        except VariableCatch:\n            # `check_hankel`-signature changed at c73d6647\n            try:\n                ht, htarg = utils.check_hankel('fht', None, verb)\n            except VariableCatch:\n                ht, htarg = utils.check_hankel('fht', None, ab, verb)\n    \n        def get_args(freqtime, ft, ftarg):\n            time, freq, ft, ftarg = utils.check_time(freqtime, signal, ft,\n                                                     ftarg, verb)\n    \n            # Calculate eta, zeta\n            etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n            etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq,\n                                                  epermV*epsilon_0)\n            zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n            zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n    \n            # `model.fem`-signature changed on 9bed72b0\n            # (29/04/2018; bef. v1.4.1)\n            inp = (ab, off, angle, zsrc, zrec, lsrc, lrec, depth, freq, etaH,\n                   etaV, zetaH, zetaV, False, False, ht, htarg, use_ne_eval,\n                   msrc, mrec, loop_freq, loop_off)\n            try:\n                out = model.fem(*inp)\n            except VariableCatch:\n                out = model.fem(*inp[:17], True, *inp[17:])\n    \n            # `model.fem` returned in the beginning only fEM;\n            # then (fEM, kcount) and finally (fEM, kcount, conv).\n            if isinstance(out, tuple):\n                fEM = np.squeeze(out[0])\n            else:\n                fEM = np.squeeze(out)\n    \n            return (fEM, time, freq, ftarg)\n    \n        # ffht used to be fft until the introduction of fft\n        try:\n            getattr(transform, 'ffht')\n            fft_and_ffht = True\n            name_ffht = 'ffht'\n        except VariableCatch:\n            fft_and_ffht = False\n            name_ffht = 'fft'\n        self.ffht_calc = getattr(transform, name_ffht)\n    \n        # Check default pts_per_dec to see if new or old case\n        try:\n            test = utils.check_time(freqtime, signal, 'sin',\n                                    ['key_201_CosSin_2012', 'test'], 0)\n            old_case = test[3][1] is None\n        except VariableCatch:\n            old_case = True\n    \n        if old_case:\n            self.ffht_st = ()  # Standard was not possible in old case\n            self.ffht_la = get_args(freqtime, name_ffht, None)\n        else:\n            self.ffht_st = get_args(freqtime, name_ffht,\n                                    ['key_201_CosSin_2012', 0])\n            self.ffht_la = get_args(freqtime, name_ffht,\n                                    ['key_201_CosSin_2012', -1])\n        self.ffht_sp = get_args(freqtime, name_ffht,\n                                ['key_201_CosSin_2012', 10])\n    \n        self.fqwe = get_args(freqtime, 'fqwe', ['', '', '', '', 10])\n    \n        self.fftlog = get_args(freqtime, 'fftlog', None)\n    \n        if fft_and_ffht:\n            self.fft = get_args(freqtime, 'fft', None)\n        else:\n            self.fft = ()",
+        "name": "transform.Fourier.time_ffht_lagged",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "c1964ac03c72c287601e39ab6af8c4e977ae21ab674a2afcab56cd3b789eb570",
+        "warmup_time": -1
+    },
+    "transform.Fourier.time_ffht_splined": {
+        "code": "class Fourier:\n    def time_ffht_splined(self, size):\n        self.ffht_calc(*self.ffht_sp)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':\n            freqtime = np.array([2.])\n        else:\n            freqtime = np.logspace(-1, 1, 11)\n    \n        # Define survey\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        angle = np.array([0])\n        off = np.array([5000])\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        verb = 0\n        use_ne_eval = False\n        loop_freq = True\n        loop_off = False\n        signal = 0\n    \n        # `pts_per_dec` changed at 9bed72b0 (29/04/2018; bef. v1.4.1)\n        try:\n            ht, htarg = utils.check_hankel('fht', ['', -1], verb)\n        except VariableCatch:\n            # `check_hankel`-signature changed at c73d6647\n            try:\n                ht, htarg = utils.check_hankel('fht', None, verb)\n            except VariableCatch:\n                ht, htarg = utils.check_hankel('fht', None, ab, verb)\n    \n        def get_args(freqtime, ft, ftarg):\n            time, freq, ft, ftarg = utils.check_time(freqtime, signal, ft,\n                                                     ftarg, verb)\n    \n            # Calculate eta, zeta\n            etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n            etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq,\n                                                  epermV*epsilon_0)\n            zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n            zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n    \n            # `model.fem`-signature changed on 9bed72b0\n            # (29/04/2018; bef. v1.4.1)\n            inp = (ab, off, angle, zsrc, zrec, lsrc, lrec, depth, freq, etaH,\n                   etaV, zetaH, zetaV, False, False, ht, htarg, use_ne_eval,\n                   msrc, mrec, loop_freq, loop_off)\n            try:\n                out = model.fem(*inp)\n            except VariableCatch:\n                out = model.fem(*inp[:17], True, *inp[17:])\n    \n            # `model.fem` returned in the beginning only fEM;\n            # then (fEM, kcount) and finally (fEM, kcount, conv).\n            if isinstance(out, tuple):\n                fEM = np.squeeze(out[0])\n            else:\n                fEM = np.squeeze(out)\n    \n            return (fEM, time, freq, ftarg)\n    \n        # ffht used to be fft until the introduction of fft\n        try:\n            getattr(transform, 'ffht')\n            fft_and_ffht = True\n            name_ffht = 'ffht'\n        except VariableCatch:\n            fft_and_ffht = False\n            name_ffht = 'fft'\n        self.ffht_calc = getattr(transform, name_ffht)\n    \n        # Check default pts_per_dec to see if new or old case\n        try:\n            test = utils.check_time(freqtime, signal, 'sin',\n                                    ['key_201_CosSin_2012', 'test'], 0)\n            old_case = test[3][1] is None\n        except VariableCatch:\n            old_case = True\n    \n        if old_case:\n            self.ffht_st = ()  # Standard was not possible in old case\n            self.ffht_la = get_args(freqtime, name_ffht, None)\n        else:\n            self.ffht_st = get_args(freqtime, name_ffht,\n                                    ['key_201_CosSin_2012', 0])\n            self.ffht_la = get_args(freqtime, name_ffht,\n                                    ['key_201_CosSin_2012', -1])\n        self.ffht_sp = get_args(freqtime, name_ffht,\n                                ['key_201_CosSin_2012', 10])\n    \n        self.fqwe = get_args(freqtime, 'fqwe', ['', '', '', '', 10])\n    \n        self.fftlog = get_args(freqtime, 'fftlog', None)\n    \n        if fft_and_ffht:\n            self.fft = get_args(freqtime, 'fft', None)\n        else:\n            self.fft = ()",
+        "name": "transform.Fourier.time_ffht_splined",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "01f72c2df5b0ad1d0a1cb8d602b72c04eda0f58ea215c0baef04b30f5557a6c9",
+        "warmup_time": -1
+    },
+    "transform.Fourier.time_ffht_standard": {
+        "code": "class Fourier:\n    def time_ffht_standard(self, size):\n        self.ffht_calc(*self.ffht_st)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':\n            freqtime = np.array([2.])\n        else:\n            freqtime = np.logspace(-1, 1, 11)\n    \n        # Define survey\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        angle = np.array([0])\n        off = np.array([5000])\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        verb = 0\n        use_ne_eval = False\n        loop_freq = True\n        loop_off = False\n        signal = 0\n    \n        # `pts_per_dec` changed at 9bed72b0 (29/04/2018; bef. v1.4.1)\n        try:\n            ht, htarg = utils.check_hankel('fht', ['', -1], verb)\n        except VariableCatch:\n            # `check_hankel`-signature changed at c73d6647\n            try:\n                ht, htarg = utils.check_hankel('fht', None, verb)\n            except VariableCatch:\n                ht, htarg = utils.check_hankel('fht', None, ab, verb)\n    \n        def get_args(freqtime, ft, ftarg):\n            time, freq, ft, ftarg = utils.check_time(freqtime, signal, ft,\n                                                     ftarg, verb)\n    \n            # Calculate eta, zeta\n            etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n            etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq,\n                                                  epermV*epsilon_0)\n            zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n            zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n    \n            # `model.fem`-signature changed on 9bed72b0\n            # (29/04/2018; bef. v1.4.1)\n            inp = (ab, off, angle, zsrc, zrec, lsrc, lrec, depth, freq, etaH,\n                   etaV, zetaH, zetaV, False, False, ht, htarg, use_ne_eval,\n                   msrc, mrec, loop_freq, loop_off)\n            try:\n                out = model.fem(*inp)\n            except VariableCatch:\n                out = model.fem(*inp[:17], True, *inp[17:])\n    \n            # `model.fem` returned in the beginning only fEM;\n            # then (fEM, kcount) and finally (fEM, kcount, conv).\n            if isinstance(out, tuple):\n                fEM = np.squeeze(out[0])\n            else:\n                fEM = np.squeeze(out)\n    \n            return (fEM, time, freq, ftarg)\n    \n        # ffht used to be fft until the introduction of fft\n        try:\n            getattr(transform, 'ffht')\n            fft_and_ffht = True\n            name_ffht = 'ffht'\n        except VariableCatch:\n            fft_and_ffht = False\n            name_ffht = 'fft'\n        self.ffht_calc = getattr(transform, name_ffht)\n    \n        # Check default pts_per_dec to see if new or old case\n        try:\n            test = utils.check_time(freqtime, signal, 'sin',\n                                    ['key_201_CosSin_2012', 'test'], 0)\n            old_case = test[3][1] is None\n        except VariableCatch:\n            old_case = True\n    \n        if old_case:\n            self.ffht_st = ()  # Standard was not possible in old case\n            self.ffht_la = get_args(freqtime, name_ffht, None)\n        else:\n            self.ffht_st = get_args(freqtime, name_ffht,\n                                    ['key_201_CosSin_2012', 0])\n            self.ffht_la = get_args(freqtime, name_ffht,\n                                    ['key_201_CosSin_2012', -1])\n        self.ffht_sp = get_args(freqtime, name_ffht,\n                                ['key_201_CosSin_2012', 10])\n    \n        self.fqwe = get_args(freqtime, 'fqwe', ['', '', '', '', 10])\n    \n        self.fftlog = get_args(freqtime, 'fftlog', None)\n    \n        if fft_and_ffht:\n            self.fft = get_args(freqtime, 'fft', None)\n        else:\n            self.fft = ()",
+        "name": "transform.Fourier.time_ffht_standard",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "c65253ce94f26d08b86a27c1e27df20c4a398fc6c53026adc39b9a0082a9a01f",
+        "warmup_time": -1
+    },
+    "transform.Fourier.time_fft": {
+        "code": "class Fourier:\n    def time_fft(self, size):\n        transform.fft(*self.fft)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':\n            freqtime = np.array([2.])\n        else:\n            freqtime = np.logspace(-1, 1, 11)\n    \n        # Define survey\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        angle = np.array([0])\n        off = np.array([5000])\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        verb = 0\n        use_ne_eval = False\n        loop_freq = True\n        loop_off = False\n        signal = 0\n    \n        # `pts_per_dec` changed at 9bed72b0 (29/04/2018; bef. v1.4.1)\n        try:\n            ht, htarg = utils.check_hankel('fht', ['', -1], verb)\n        except VariableCatch:\n            # `check_hankel`-signature changed at c73d6647\n            try:\n                ht, htarg = utils.check_hankel('fht', None, verb)\n            except VariableCatch:\n                ht, htarg = utils.check_hankel('fht', None, ab, verb)\n    \n        def get_args(freqtime, ft, ftarg):\n            time, freq, ft, ftarg = utils.check_time(freqtime, signal, ft,\n                                                     ftarg, verb)\n    \n            # Calculate eta, zeta\n            etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n            etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq,\n                                                  epermV*epsilon_0)\n            zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n            zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n    \n            # `model.fem`-signature changed on 9bed72b0\n            # (29/04/2018; bef. v1.4.1)\n            inp = (ab, off, angle, zsrc, zrec, lsrc, lrec, depth, freq, etaH,\n                   etaV, zetaH, zetaV, False, False, ht, htarg, use_ne_eval,\n                   msrc, mrec, loop_freq, loop_off)\n            try:\n                out = model.fem(*inp)\n            except VariableCatch:\n                out = model.fem(*inp[:17], True, *inp[17:])\n    \n            # `model.fem` returned in the beginning only fEM;\n            # then (fEM, kcount) and finally (fEM, kcount, conv).\n            if isinstance(out, tuple):\n                fEM = np.squeeze(out[0])\n            else:\n                fEM = np.squeeze(out)\n    \n            return (fEM, time, freq, ftarg)\n    \n        # ffht used to be fft until the introduction of fft\n        try:\n            getattr(transform, 'ffht')\n            fft_and_ffht = True\n            name_ffht = 'ffht'\n        except VariableCatch:\n            fft_and_ffht = False\n            name_ffht = 'fft'\n        self.ffht_calc = getattr(transform, name_ffht)\n    \n        # Check default pts_per_dec to see if new or old case\n        try:\n            test = utils.check_time(freqtime, signal, 'sin',\n                                    ['key_201_CosSin_2012', 'test'], 0)\n            old_case = test[3][1] is None\n        except VariableCatch:\n            old_case = True\n    \n        if old_case:\n            self.ffht_st = ()  # Standard was not possible in old case\n            self.ffht_la = get_args(freqtime, name_ffht, None)\n        else:\n            self.ffht_st = get_args(freqtime, name_ffht,\n                                    ['key_201_CosSin_2012', 0])\n            self.ffht_la = get_args(freqtime, name_ffht,\n                                    ['key_201_CosSin_2012', -1])\n        self.ffht_sp = get_args(freqtime, name_ffht,\n                                ['key_201_CosSin_2012', 10])\n    \n        self.fqwe = get_args(freqtime, 'fqwe', ['', '', '', '', 10])\n    \n        self.fftlog = get_args(freqtime, 'fftlog', None)\n    \n        if fft_and_ffht:\n            self.fft = get_args(freqtime, 'fft', None)\n        else:\n            self.fft = ()",
+        "name": "transform.Fourier.time_fft",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "85ecba53d67ecce55bc394346525551ff8670eab90073c809c6085c6fb5f29ba",
+        "warmup_time": -1
+    },
+    "transform.Fourier.time_fftlog": {
+        "code": "class Fourier:\n    def time_fftlog(self, size):\n        transform.fftlog(*self.fftlog)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':\n            freqtime = np.array([2.])\n        else:\n            freqtime = np.logspace(-1, 1, 11)\n    \n        # Define survey\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        angle = np.array([0])\n        off = np.array([5000])\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        verb = 0\n        use_ne_eval = False\n        loop_freq = True\n        loop_off = False\n        signal = 0\n    \n        # `pts_per_dec` changed at 9bed72b0 (29/04/2018; bef. v1.4.1)\n        try:\n            ht, htarg = utils.check_hankel('fht', ['', -1], verb)\n        except VariableCatch:\n            # `check_hankel`-signature changed at c73d6647\n            try:\n                ht, htarg = utils.check_hankel('fht', None, verb)\n            except VariableCatch:\n                ht, htarg = utils.check_hankel('fht', None, ab, verb)\n    \n        def get_args(freqtime, ft, ftarg):\n            time, freq, ft, ftarg = utils.check_time(freqtime, signal, ft,\n                                                     ftarg, verb)\n    \n            # Calculate eta, zeta\n            etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n            etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq,\n                                                  epermV*epsilon_0)\n            zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n            zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n    \n            # `model.fem`-signature changed on 9bed72b0\n            # (29/04/2018; bef. v1.4.1)\n            inp = (ab, off, angle, zsrc, zrec, lsrc, lrec, depth, freq, etaH,\n                   etaV, zetaH, zetaV, False, False, ht, htarg, use_ne_eval,\n                   msrc, mrec, loop_freq, loop_off)\n            try:\n                out = model.fem(*inp)\n            except VariableCatch:\n                out = model.fem(*inp[:17], True, *inp[17:])\n    \n            # `model.fem` returned in the beginning only fEM;\n            # then (fEM, kcount) and finally (fEM, kcount, conv).\n            if isinstance(out, tuple):\n                fEM = np.squeeze(out[0])\n            else:\n                fEM = np.squeeze(out)\n    \n            return (fEM, time, freq, ftarg)\n    \n        # ffht used to be fft until the introduction of fft\n        try:\n            getattr(transform, 'ffht')\n            fft_and_ffht = True\n            name_ffht = 'ffht'\n        except VariableCatch:\n            fft_and_ffht = False\n            name_ffht = 'fft'\n        self.ffht_calc = getattr(transform, name_ffht)\n    \n        # Check default pts_per_dec to see if new or old case\n        try:\n            test = utils.check_time(freqtime, signal, 'sin',\n                                    ['key_201_CosSin_2012', 'test'], 0)\n            old_case = test[3][1] is None\n        except VariableCatch:\n            old_case = True\n    \n        if old_case:\n            self.ffht_st = ()  # Standard was not possible in old case\n            self.ffht_la = get_args(freqtime, name_ffht, None)\n        else:\n            self.ffht_st = get_args(freqtime, name_ffht,\n                                    ['key_201_CosSin_2012', 0])\n            self.ffht_la = get_args(freqtime, name_ffht,\n                                    ['key_201_CosSin_2012', -1])\n        self.ffht_sp = get_args(freqtime, name_ffht,\n                                ['key_201_CosSin_2012', 10])\n    \n        self.fqwe = get_args(freqtime, 'fqwe', ['', '', '', '', 10])\n    \n        self.fftlog = get_args(freqtime, 'fftlog', None)\n    \n        if fft_and_ffht:\n            self.fft = get_args(freqtime, 'fft', None)\n        else:\n            self.fft = ()",
+        "name": "transform.Fourier.time_fftlog",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "2077dc0ba9a90293631cd4198ca0d2ae0d6c41374144362fad40cfbb027e7c4a",
+        "warmup_time": -1
+    },
+    "transform.Fourier.time_fqwe": {
+        "code": "class Fourier:\n    def time_fqwe(self, size):\n        transform.fqwe(*self.fqwe)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':\n            freqtime = np.array([2.])\n        else:\n            freqtime = np.logspace(-1, 1, 11)\n    \n        # Define survey\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        angle = np.array([0])\n        off = np.array([5000])\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        verb = 0\n        use_ne_eval = False\n        loop_freq = True\n        loop_off = False\n        signal = 0\n    \n        # `pts_per_dec` changed at 9bed72b0 (29/04/2018; bef. v1.4.1)\n        try:\n            ht, htarg = utils.check_hankel('fht', ['', -1], verb)\n        except VariableCatch:\n            # `check_hankel`-signature changed at c73d6647\n            try:\n                ht, htarg = utils.check_hankel('fht', None, verb)\n            except VariableCatch:\n                ht, htarg = utils.check_hankel('fht', None, ab, verb)\n    \n        def get_args(freqtime, ft, ftarg):\n            time, freq, ft, ftarg = utils.check_time(freqtime, signal, ft,\n                                                     ftarg, verb)\n    \n            # Calculate eta, zeta\n            etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n            etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq,\n                                                  epermV*epsilon_0)\n            zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n            zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n    \n            # `model.fem`-signature changed on 9bed72b0\n            # (29/04/2018; bef. v1.4.1)\n            inp = (ab, off, angle, zsrc, zrec, lsrc, lrec, depth, freq, etaH,\n                   etaV, zetaH, zetaV, False, False, ht, htarg, use_ne_eval,\n                   msrc, mrec, loop_freq, loop_off)\n            try:\n                out = model.fem(*inp)\n            except VariableCatch:\n                out = model.fem(*inp[:17], True, *inp[17:])\n    \n            # `model.fem` returned in the beginning only fEM;\n            # then (fEM, kcount) and finally (fEM, kcount, conv).\n            if isinstance(out, tuple):\n                fEM = np.squeeze(out[0])\n            else:\n                fEM = np.squeeze(out)\n    \n            return (fEM, time, freq, ftarg)\n    \n        # ffht used to be fft until the introduction of fft\n        try:\n            getattr(transform, 'ffht')\n            fft_and_ffht = True\n            name_ffht = 'ffht'\n        except VariableCatch:\n            fft_and_ffht = False\n            name_ffht = 'fft'\n        self.ffht_calc = getattr(transform, name_ffht)\n    \n        # Check default pts_per_dec to see if new or old case\n        try:\n            test = utils.check_time(freqtime, signal, 'sin',\n                                    ['key_201_CosSin_2012', 'test'], 0)\n            old_case = test[3][1] is None\n        except VariableCatch:\n            old_case = True\n    \n        if old_case:\n            self.ffht_st = ()  # Standard was not possible in old case\n            self.ffht_la = get_args(freqtime, name_ffht, None)\n        else:\n            self.ffht_st = get_args(freqtime, name_ffht,\n                                    ['key_201_CosSin_2012', 0])\n            self.ffht_la = get_args(freqtime, name_ffht,\n                                    ['key_201_CosSin_2012', -1])\n        self.ffht_sp = get_args(freqtime, name_ffht,\n                                ['key_201_CosSin_2012', 10])\n    \n        self.fqwe = get_args(freqtime, 'fqwe', ['', '', '', '', 10])\n    \n        self.fftlog = get_args(freqtime, 'fftlog', None)\n    \n        if fft_and_ffht:\n            self.fft = get_args(freqtime, 'fft', None)\n        else:\n            self.fft = ()",
+        "name": "transform.Fourier.time_fqwe",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "8c9ac2255af56cd6a6d27193a90d47736e5c76e5c5a3af314a14460085f1caa6",
+        "warmup_time": -1
+    },
+    "transform.Hankel.time_fht_lagged": {
+        "code": "class Hankel:\n    def time_fht_lagged(self, size):\n        transform.fht(**self.fhtarg_la, **self.hankel)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':  # Total size: 5*1*1*1 = 5\n            off = np.array([500.])\n        else:          # Total size: 5*100*1*201 = 100'500\n            off = np.arange(1, 101)*200.\n    \n        # Define survey\n        freq = np.array([1])\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        angle = np.zeros(off.shape)\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        use_ne_eval = False\n        xdirect = False\n        verb = 0\n    \n        # Calculate eta, zeta\n        etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n        etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq, epermV*epsilon_0)\n        zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n        zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n    \n        # Collect input for kernel.greenfct()\n        self.hankel = {'zsrc': zsrc, 'zrec': zrec, 'lsrc': lsrc, 'lrec': lrec,\n                       'off': off, 'angle': angle, 'depth': depth, 'ab': ab,\n                       'etaH': etaH, 'etaV': etaV, 'zetaH': zetaH, 'zetaV':\n                       zetaV, 'xdirect': xdirect, 'msrc': msrc, 'mrec': mrec,\n                       'use_ne_eval': use_ne_eval}\n    \n        # Before c73d6647; you had to give `ab` to `check_hankel`;\n        # check_opt didn't exist then.\n        try:\n            opt = utils.check_opt(None, None, 'fht', ['', 0], verb)\n            charg = (verb, )\n            if np.size(opt) == 4:\n                new_version = False\n            else:\n                new_version = True\n        except VariableCatch:\n            new_version = False\n            charg = (ab, verb)\n    \n        # From 9bed72b0 onwards, there is no `use_spline`; `ftarg` input\n        # changed (29/04/2018; before v1.4.1).\n        if new_version:\n            ftarg = ['key_201_2009', -1]\n        else:\n            ftarg = ['key_201_2009', None]\n    \n        # HT arguments\n        _, fhtarg_st = utils.check_hankel('fht', ['key_201_2009', 0], *charg)\n        self.fhtarg_st = {'fhtarg': fhtarg_st}\n        _, fhtarg_sp = utils.check_hankel('fht', ['key_201_2009', 10], *charg)\n        self.fhtarg_sp = {'fhtarg': fhtarg_sp}\n        _, fhtarg_la = utils.check_hankel('fht', ftarg, *charg)\n        self.fhtarg_la = {'fhtarg': fhtarg_la}\n    \n        # QWE: We lower the requirements here, otherwise it takes too long\n        # ['rtol', 'atol', 'nquad', 'maxint', 'pts_per_dec', 'diff_quad', 'a',\n        # 'b', 'limit']\n    \n        # Args depend if QUAD included into QWE or not\n        try:\n            args_sp = [1e-6, 1e-10, 51, 100, 10, np.inf]\n            args_st = [1e-6, 1e-10, 51, 100, 0, np.inf]\n            _, qwearg_sp = utils.check_hankel('qwe', args_sp, *charg)\n            _, qwearg_st = utils.check_hankel('qwe', args_st, *charg)\n        except VariableCatch:\n            args_sp = [1e-6, 1e-10, 51, 100, 10]\n            args_st = [1e-6, 1e-10, 51, 100, 0]\n            _, qwearg_sp = utils.check_hankel('qwe', args_sp, *charg)\n            _, qwearg_st = utils.check_hankel('qwe', args_st, *charg)\n    \n        self.qwearg_st = {'qweargs': qwearg_st}\n        self.qwearg_sp = {'qweargs': qwearg_sp}\n    \n        # QUAD: We lower the requirements here, otherwise it takes too long\n        # ['rtol', 'atol', 'limit', 'a', 'b', 'pts_per_dec']\n        args = [1e-6, 1e-10, 100, 1e-6, 0.1, 10]\n        try:  # QUAD only included since 6104614e (before v1.3.0)\n            _, quadargs = utils.check_hankel('quad', args, *charg)\n            self.quadargs = {'quadargs': quadargs}\n        except VariableCatch:\n            self.quadargs = {}\n    \n        if not new_version:\n            self.fhtarg_la.update({'use_spline': True})\n            self.fhtarg_sp.update({'use_spline': True})\n            self.fhtarg_st.update({'use_spline': False})\n            self.qwearg_sp.update({'use_spline': True})\n            self.qwearg_st.update({'use_spline': False})\n            self.quadargs.update({'use_spline': True})",
+        "name": "transform.Hankel.time_fht_lagged",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "8132eba134fc044a517afb3e2feab8a10fa2aacf6556bc83878812f9c9403ad8",
+        "warmup_time": -1
+    },
+    "transform.Hankel.time_fht_splined": {
+        "code": "class Hankel:\n    def time_fht_splined(self, size):\n        transform.fht(**self.fhtarg_sp, **self.hankel)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':  # Total size: 5*1*1*1 = 5\n            off = np.array([500.])\n        else:          # Total size: 5*100*1*201 = 100'500\n            off = np.arange(1, 101)*200.\n    \n        # Define survey\n        freq = np.array([1])\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        angle = np.zeros(off.shape)\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        use_ne_eval = False\n        xdirect = False\n        verb = 0\n    \n        # Calculate eta, zeta\n        etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n        etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq, epermV*epsilon_0)\n        zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n        zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n    \n        # Collect input for kernel.greenfct()\n        self.hankel = {'zsrc': zsrc, 'zrec': zrec, 'lsrc': lsrc, 'lrec': lrec,\n                       'off': off, 'angle': angle, 'depth': depth, 'ab': ab,\n                       'etaH': etaH, 'etaV': etaV, 'zetaH': zetaH, 'zetaV':\n                       zetaV, 'xdirect': xdirect, 'msrc': msrc, 'mrec': mrec,\n                       'use_ne_eval': use_ne_eval}\n    \n        # Before c73d6647; you had to give `ab` to `check_hankel`;\n        # check_opt didn't exist then.\n        try:\n            opt = utils.check_opt(None, None, 'fht', ['', 0], verb)\n            charg = (verb, )\n            if np.size(opt) == 4:\n                new_version = False\n            else:\n                new_version = True\n        except VariableCatch:\n            new_version = False\n            charg = (ab, verb)\n    \n        # From 9bed72b0 onwards, there is no `use_spline`; `ftarg` input\n        # changed (29/04/2018; before v1.4.1).\n        if new_version:\n            ftarg = ['key_201_2009', -1]\n        else:\n            ftarg = ['key_201_2009', None]\n    \n        # HT arguments\n        _, fhtarg_st = utils.check_hankel('fht', ['key_201_2009', 0], *charg)\n        self.fhtarg_st = {'fhtarg': fhtarg_st}\n        _, fhtarg_sp = utils.check_hankel('fht', ['key_201_2009', 10], *charg)\n        self.fhtarg_sp = {'fhtarg': fhtarg_sp}\n        _, fhtarg_la = utils.check_hankel('fht', ftarg, *charg)\n        self.fhtarg_la = {'fhtarg': fhtarg_la}\n    \n        # QWE: We lower the requirements here, otherwise it takes too long\n        # ['rtol', 'atol', 'nquad', 'maxint', 'pts_per_dec', 'diff_quad', 'a',\n        # 'b', 'limit']\n    \n        # Args depend if QUAD included into QWE or not\n        try:\n            args_sp = [1e-6, 1e-10, 51, 100, 10, np.inf]\n            args_st = [1e-6, 1e-10, 51, 100, 0, np.inf]\n            _, qwearg_sp = utils.check_hankel('qwe', args_sp, *charg)\n            _, qwearg_st = utils.check_hankel('qwe', args_st, *charg)\n        except VariableCatch:\n            args_sp = [1e-6, 1e-10, 51, 100, 10]\n            args_st = [1e-6, 1e-10, 51, 100, 0]\n            _, qwearg_sp = utils.check_hankel('qwe', args_sp, *charg)\n            _, qwearg_st = utils.check_hankel('qwe', args_st, *charg)\n    \n        self.qwearg_st = {'qweargs': qwearg_st}\n        self.qwearg_sp = {'qweargs': qwearg_sp}\n    \n        # QUAD: We lower the requirements here, otherwise it takes too long\n        # ['rtol', 'atol', 'limit', 'a', 'b', 'pts_per_dec']\n        args = [1e-6, 1e-10, 100, 1e-6, 0.1, 10]\n        try:  # QUAD only included since 6104614e (before v1.3.0)\n            _, quadargs = utils.check_hankel('quad', args, *charg)\n            self.quadargs = {'quadargs': quadargs}\n        except VariableCatch:\n            self.quadargs = {}\n    \n        if not new_version:\n            self.fhtarg_la.update({'use_spline': True})\n            self.fhtarg_sp.update({'use_spline': True})\n            self.fhtarg_st.update({'use_spline': False})\n            self.qwearg_sp.update({'use_spline': True})\n            self.qwearg_st.update({'use_spline': False})\n            self.quadargs.update({'use_spline': True})",
+        "name": "transform.Hankel.time_fht_splined",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "68e514b5d4e3c1f4dbaa2fede7e8e47e5dae5d31b0bfa0620f7db12855da90d0",
+        "warmup_time": -1
+    },
+    "transform.Hankel.time_fht_standard": {
+        "code": "class Hankel:\n    def time_fht_standard(self, size):\n        transform.fht(**self.fhtarg_st, **self.hankel)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':  # Total size: 5*1*1*1 = 5\n            off = np.array([500.])\n        else:          # Total size: 5*100*1*201 = 100'500\n            off = np.arange(1, 101)*200.\n    \n        # Define survey\n        freq = np.array([1])\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        angle = np.zeros(off.shape)\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        use_ne_eval = False\n        xdirect = False\n        verb = 0\n    \n        # Calculate eta, zeta\n        etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n        etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq, epermV*epsilon_0)\n        zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n        zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n    \n        # Collect input for kernel.greenfct()\n        self.hankel = {'zsrc': zsrc, 'zrec': zrec, 'lsrc': lsrc, 'lrec': lrec,\n                       'off': off, 'angle': angle, 'depth': depth, 'ab': ab,\n                       'etaH': etaH, 'etaV': etaV, 'zetaH': zetaH, 'zetaV':\n                       zetaV, 'xdirect': xdirect, 'msrc': msrc, 'mrec': mrec,\n                       'use_ne_eval': use_ne_eval}\n    \n        # Before c73d6647; you had to give `ab` to `check_hankel`;\n        # check_opt didn't exist then.\n        try:\n            opt = utils.check_opt(None, None, 'fht', ['', 0], verb)\n            charg = (verb, )\n            if np.size(opt) == 4:\n                new_version = False\n            else:\n                new_version = True\n        except VariableCatch:\n            new_version = False\n            charg = (ab, verb)\n    \n        # From 9bed72b0 onwards, there is no `use_spline`; `ftarg` input\n        # changed (29/04/2018; before v1.4.1).\n        if new_version:\n            ftarg = ['key_201_2009', -1]\n        else:\n            ftarg = ['key_201_2009', None]\n    \n        # HT arguments\n        _, fhtarg_st = utils.check_hankel('fht', ['key_201_2009', 0], *charg)\n        self.fhtarg_st = {'fhtarg': fhtarg_st}\n        _, fhtarg_sp = utils.check_hankel('fht', ['key_201_2009', 10], *charg)\n        self.fhtarg_sp = {'fhtarg': fhtarg_sp}\n        _, fhtarg_la = utils.check_hankel('fht', ftarg, *charg)\n        self.fhtarg_la = {'fhtarg': fhtarg_la}\n    \n        # QWE: We lower the requirements here, otherwise it takes too long\n        # ['rtol', 'atol', 'nquad', 'maxint', 'pts_per_dec', 'diff_quad', 'a',\n        # 'b', 'limit']\n    \n        # Args depend if QUAD included into QWE or not\n        try:\n            args_sp = [1e-6, 1e-10, 51, 100, 10, np.inf]\n            args_st = [1e-6, 1e-10, 51, 100, 0, np.inf]\n            _, qwearg_sp = utils.check_hankel('qwe', args_sp, *charg)\n            _, qwearg_st = utils.check_hankel('qwe', args_st, *charg)\n        except VariableCatch:\n            args_sp = [1e-6, 1e-10, 51, 100, 10]\n            args_st = [1e-6, 1e-10, 51, 100, 0]\n            _, qwearg_sp = utils.check_hankel('qwe', args_sp, *charg)\n            _, qwearg_st = utils.check_hankel('qwe', args_st, *charg)\n    \n        self.qwearg_st = {'qweargs': qwearg_st}\n        self.qwearg_sp = {'qweargs': qwearg_sp}\n    \n        # QUAD: We lower the requirements here, otherwise it takes too long\n        # ['rtol', 'atol', 'limit', 'a', 'b', 'pts_per_dec']\n        args = [1e-6, 1e-10, 100, 1e-6, 0.1, 10]\n        try:  # QUAD only included since 6104614e (before v1.3.0)\n            _, quadargs = utils.check_hankel('quad', args, *charg)\n            self.quadargs = {'quadargs': quadargs}\n        except VariableCatch:\n            self.quadargs = {}\n    \n        if not new_version:\n            self.fhtarg_la.update({'use_spline': True})\n            self.fhtarg_sp.update({'use_spline': True})\n            self.fhtarg_st.update({'use_spline': False})\n            self.qwearg_sp.update({'use_spline': True})\n            self.qwearg_st.update({'use_spline': False})\n            self.quadargs.update({'use_spline': True})",
+        "name": "transform.Hankel.time_fht_standard",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "e109f935f851a9a3337f7e71c42b19933dac70244ca726437d8735174f09a5dd",
+        "warmup_time": -1
+    },
+    "transform.Hankel.time_hquad": {
+        "code": "class Hankel:\n    def time_hquad(self, size):\n        transform.hquad(**self.quadargs, **self.hankel)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':  # Total size: 5*1*1*1 = 5\n            off = np.array([500.])\n        else:          # Total size: 5*100*1*201 = 100'500\n            off = np.arange(1, 101)*200.\n    \n        # Define survey\n        freq = np.array([1])\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        angle = np.zeros(off.shape)\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        use_ne_eval = False\n        xdirect = False\n        verb = 0\n    \n        # Calculate eta, zeta\n        etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n        etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq, epermV*epsilon_0)\n        zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n        zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n    \n        # Collect input for kernel.greenfct()\n        self.hankel = {'zsrc': zsrc, 'zrec': zrec, 'lsrc': lsrc, 'lrec': lrec,\n                       'off': off, 'angle': angle, 'depth': depth, 'ab': ab,\n                       'etaH': etaH, 'etaV': etaV, 'zetaH': zetaH, 'zetaV':\n                       zetaV, 'xdirect': xdirect, 'msrc': msrc, 'mrec': mrec,\n                       'use_ne_eval': use_ne_eval}\n    \n        # Before c73d6647; you had to give `ab` to `check_hankel`;\n        # check_opt didn't exist then.\n        try:\n            opt = utils.check_opt(None, None, 'fht', ['', 0], verb)\n            charg = (verb, )\n            if np.size(opt) == 4:\n                new_version = False\n            else:\n                new_version = True\n        except VariableCatch:\n            new_version = False\n            charg = (ab, verb)\n    \n        # From 9bed72b0 onwards, there is no `use_spline`; `ftarg` input\n        # changed (29/04/2018; before v1.4.1).\n        if new_version:\n            ftarg = ['key_201_2009', -1]\n        else:\n            ftarg = ['key_201_2009', None]\n    \n        # HT arguments\n        _, fhtarg_st = utils.check_hankel('fht', ['key_201_2009', 0], *charg)\n        self.fhtarg_st = {'fhtarg': fhtarg_st}\n        _, fhtarg_sp = utils.check_hankel('fht', ['key_201_2009', 10], *charg)\n        self.fhtarg_sp = {'fhtarg': fhtarg_sp}\n        _, fhtarg_la = utils.check_hankel('fht', ftarg, *charg)\n        self.fhtarg_la = {'fhtarg': fhtarg_la}\n    \n        # QWE: We lower the requirements here, otherwise it takes too long\n        # ['rtol', 'atol', 'nquad', 'maxint', 'pts_per_dec', 'diff_quad', 'a',\n        # 'b', 'limit']\n    \n        # Args depend if QUAD included into QWE or not\n        try:\n            args_sp = [1e-6, 1e-10, 51, 100, 10, np.inf]\n            args_st = [1e-6, 1e-10, 51, 100, 0, np.inf]\n            _, qwearg_sp = utils.check_hankel('qwe', args_sp, *charg)\n            _, qwearg_st = utils.check_hankel('qwe', args_st, *charg)\n        except VariableCatch:\n            args_sp = [1e-6, 1e-10, 51, 100, 10]\n            args_st = [1e-6, 1e-10, 51, 100, 0]\n            _, qwearg_sp = utils.check_hankel('qwe', args_sp, *charg)\n            _, qwearg_st = utils.check_hankel('qwe', args_st, *charg)\n    \n        self.qwearg_st = {'qweargs': qwearg_st}\n        self.qwearg_sp = {'qweargs': qwearg_sp}\n    \n        # QUAD: We lower the requirements here, otherwise it takes too long\n        # ['rtol', 'atol', 'limit', 'a', 'b', 'pts_per_dec']\n        args = [1e-6, 1e-10, 100, 1e-6, 0.1, 10]\n        try:  # QUAD only included since 6104614e (before v1.3.0)\n            _, quadargs = utils.check_hankel('quad', args, *charg)\n            self.quadargs = {'quadargs': quadargs}\n        except VariableCatch:\n            self.quadargs = {}\n    \n        if not new_version:\n            self.fhtarg_la.update({'use_spline': True})\n            self.fhtarg_sp.update({'use_spline': True})\n            self.fhtarg_st.update({'use_spline': False})\n            self.qwearg_sp.update({'use_spline': True})\n            self.qwearg_st.update({'use_spline': False})\n            self.quadargs.update({'use_spline': True})",
+        "name": "transform.Hankel.time_hquad",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "dd0fedf5c12b90cdc56af960afd761bbe171e8928a0b4d0b789473d50ec0001f",
+        "warmup_time": -1
+    },
+    "transform.Hankel.time_hqwe_splined": {
+        "code": "class Hankel:\n    def time_hqwe_splined(self, size):\n        transform.hqwe(**self.qwearg_sp, **self.hankel)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':  # Total size: 5*1*1*1 = 5\n            off = np.array([500.])\n        else:          # Total size: 5*100*1*201 = 100'500\n            off = np.arange(1, 101)*200.\n    \n        # Define survey\n        freq = np.array([1])\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        angle = np.zeros(off.shape)\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        use_ne_eval = False\n        xdirect = False\n        verb = 0\n    \n        # Calculate eta, zeta\n        etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n        etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq, epermV*epsilon_0)\n        zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n        zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n    \n        # Collect input for kernel.greenfct()\n        self.hankel = {'zsrc': zsrc, 'zrec': zrec, 'lsrc': lsrc, 'lrec': lrec,\n                       'off': off, 'angle': angle, 'depth': depth, 'ab': ab,\n                       'etaH': etaH, 'etaV': etaV, 'zetaH': zetaH, 'zetaV':\n                       zetaV, 'xdirect': xdirect, 'msrc': msrc, 'mrec': mrec,\n                       'use_ne_eval': use_ne_eval}\n    \n        # Before c73d6647; you had to give `ab` to `check_hankel`;\n        # check_opt didn't exist then.\n        try:\n            opt = utils.check_opt(None, None, 'fht', ['', 0], verb)\n            charg = (verb, )\n            if np.size(opt) == 4:\n                new_version = False\n            else:\n                new_version = True\n        except VariableCatch:\n            new_version = False\n            charg = (ab, verb)\n    \n        # From 9bed72b0 onwards, there is no `use_spline`; `ftarg` input\n        # changed (29/04/2018; before v1.4.1).\n        if new_version:\n            ftarg = ['key_201_2009', -1]\n        else:\n            ftarg = ['key_201_2009', None]\n    \n        # HT arguments\n        _, fhtarg_st = utils.check_hankel('fht', ['key_201_2009', 0], *charg)\n        self.fhtarg_st = {'fhtarg': fhtarg_st}\n        _, fhtarg_sp = utils.check_hankel('fht', ['key_201_2009', 10], *charg)\n        self.fhtarg_sp = {'fhtarg': fhtarg_sp}\n        _, fhtarg_la = utils.check_hankel('fht', ftarg, *charg)\n        self.fhtarg_la = {'fhtarg': fhtarg_la}\n    \n        # QWE: We lower the requirements here, otherwise it takes too long\n        # ['rtol', 'atol', 'nquad', 'maxint', 'pts_per_dec', 'diff_quad', 'a',\n        # 'b', 'limit']\n    \n        # Args depend if QUAD included into QWE or not\n        try:\n            args_sp = [1e-6, 1e-10, 51, 100, 10, np.inf]\n            args_st = [1e-6, 1e-10, 51, 100, 0, np.inf]\n            _, qwearg_sp = utils.check_hankel('qwe', args_sp, *charg)\n            _, qwearg_st = utils.check_hankel('qwe', args_st, *charg)\n        except VariableCatch:\n            args_sp = [1e-6, 1e-10, 51, 100, 10]\n            args_st = [1e-6, 1e-10, 51, 100, 0]\n            _, qwearg_sp = utils.check_hankel('qwe', args_sp, *charg)\n            _, qwearg_st = utils.check_hankel('qwe', args_st, *charg)\n    \n        self.qwearg_st = {'qweargs': qwearg_st}\n        self.qwearg_sp = {'qweargs': qwearg_sp}\n    \n        # QUAD: We lower the requirements here, otherwise it takes too long\n        # ['rtol', 'atol', 'limit', 'a', 'b', 'pts_per_dec']\n        args = [1e-6, 1e-10, 100, 1e-6, 0.1, 10]\n        try:  # QUAD only included since 6104614e (before v1.3.0)\n            _, quadargs = utils.check_hankel('quad', args, *charg)\n            self.quadargs = {'quadargs': quadargs}\n        except VariableCatch:\n            self.quadargs = {}\n    \n        if not new_version:\n            self.fhtarg_la.update({'use_spline': True})\n            self.fhtarg_sp.update({'use_spline': True})\n            self.fhtarg_st.update({'use_spline': False})\n            self.qwearg_sp.update({'use_spline': True})\n            self.qwearg_st.update({'use_spline': False})\n            self.quadargs.update({'use_spline': True})",
+        "name": "transform.Hankel.time_hqwe_splined",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "9eac117177a34d20baa6603c292d10f8e8001a55a6ab580108cbe98929bafe15",
+        "warmup_time": -1
+    },
+    "transform.Hankel.time_hqwe_standard": {
+        "code": "class Hankel:\n    def time_hqwe_standard(self, size):\n        transform.hqwe(**self.qwearg_st, **self.hankel)\n\n    def setup(self, size):\n    \n        # One big, one small model\n        if size == 'Small':  # Total size: 5*1*1*1 = 5\n            off = np.array([500.])\n        else:          # Total size: 5*100*1*201 = 100'500\n            off = np.arange(1, 101)*200.\n    \n        # Define survey\n        freq = np.array([1])\n        lsrc = 1\n        zsrc = np.array([250.])\n        lrec = 1\n        zrec = np.array([300.])\n        angle = np.zeros(off.shape)\n        ab = 11\n        msrc = False\n        mrec = False\n    \n        # Define model\n        depth = np.array([-np.infty, 0, 300, 2000, 2100])\n        res = np.array([2e14, .3, 1, 50, 1])\n        aniso = np.ones(res.shape)\n        epermH = np.ones(res.shape)\n        epermV = np.ones(res.shape)\n        mpermH = np.ones(res.shape)\n        mpermV = np.ones(res.shape)\n    \n        # Other parameters\n        use_ne_eval = False\n        xdirect = False\n        verb = 0\n    \n        # Calculate eta, zeta\n        etaH = 1/res + np.outer(2j*np.pi*freq, epermH*epsilon_0)\n        etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq, epermV*epsilon_0)\n        zetaH = np.outer(2j*np.pi*freq, mpermH*mu_0)\n        zetaV = np.outer(2j*np.pi*freq, mpermV*mu_0)\n    \n        # Collect input for kernel.greenfct()\n        self.hankel = {'zsrc': zsrc, 'zrec': zrec, 'lsrc': lsrc, 'lrec': lrec,\n                       'off': off, 'angle': angle, 'depth': depth, 'ab': ab,\n                       'etaH': etaH, 'etaV': etaV, 'zetaH': zetaH, 'zetaV':\n                       zetaV, 'xdirect': xdirect, 'msrc': msrc, 'mrec': mrec,\n                       'use_ne_eval': use_ne_eval}\n    \n        # Before c73d6647; you had to give `ab` to `check_hankel`;\n        # check_opt didn't exist then.\n        try:\n            opt = utils.check_opt(None, None, 'fht', ['', 0], verb)\n            charg = (verb, )\n            if np.size(opt) == 4:\n                new_version = False\n            else:\n                new_version = True\n        except VariableCatch:\n            new_version = False\n            charg = (ab, verb)\n    \n        # From 9bed72b0 onwards, there is no `use_spline`; `ftarg` input\n        # changed (29/04/2018; before v1.4.1).\n        if new_version:\n            ftarg = ['key_201_2009', -1]\n        else:\n            ftarg = ['key_201_2009', None]\n    \n        # HT arguments\n        _, fhtarg_st = utils.check_hankel('fht', ['key_201_2009', 0], *charg)\n        self.fhtarg_st = {'fhtarg': fhtarg_st}\n        _, fhtarg_sp = utils.check_hankel('fht', ['key_201_2009', 10], *charg)\n        self.fhtarg_sp = {'fhtarg': fhtarg_sp}\n        _, fhtarg_la = utils.check_hankel('fht', ftarg, *charg)\n        self.fhtarg_la = {'fhtarg': fhtarg_la}\n    \n        # QWE: We lower the requirements here, otherwise it takes too long\n        # ['rtol', 'atol', 'nquad', 'maxint', 'pts_per_dec', 'diff_quad', 'a',\n        # 'b', 'limit']\n    \n        # Args depend if QUAD included into QWE or not\n        try:\n            args_sp = [1e-6, 1e-10, 51, 100, 10, np.inf]\n            args_st = [1e-6, 1e-10, 51, 100, 0, np.inf]\n            _, qwearg_sp = utils.check_hankel('qwe', args_sp, *charg)\n            _, qwearg_st = utils.check_hankel('qwe', args_st, *charg)\n        except VariableCatch:\n            args_sp = [1e-6, 1e-10, 51, 100, 10]\n            args_st = [1e-6, 1e-10, 51, 100, 0]\n            _, qwearg_sp = utils.check_hankel('qwe', args_sp, *charg)\n            _, qwearg_st = utils.check_hankel('qwe', args_st, *charg)\n    \n        self.qwearg_st = {'qweargs': qwearg_st}\n        self.qwearg_sp = {'qweargs': qwearg_sp}\n    \n        # QUAD: We lower the requirements here, otherwise it takes too long\n        # ['rtol', 'atol', 'limit', 'a', 'b', 'pts_per_dec']\n        args = [1e-6, 1e-10, 100, 1e-6, 0.1, 10]\n        try:  # QUAD only included since 6104614e (before v1.3.0)\n            _, quadargs = utils.check_hankel('quad', args, *charg)\n            self.quadargs = {'quadargs': quadargs}\n        except VariableCatch:\n            self.quadargs = {}\n    \n        if not new_version:\n            self.fhtarg_la.update({'use_spline': True})\n            self.fhtarg_sp.update({'use_spline': True})\n            self.fhtarg_st.update({'use_spline': False})\n            self.qwearg_sp.update({'use_spline': True})\n            self.qwearg_st.update({'use_spline': False})\n            self.quadargs.update({'use_spline': True})",
+        "name": "transform.Hankel.time_hqwe_standard",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "'Small'",
+                "'Big'"
+            ]
+        ],
+        "repeat": 0,
+        "sample_time": 0.1,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "0120945626ae804c681c670b6dc0647d89e8641cc7e890e0c706084d6f550412",
+        "warmup_time": -1
+    },
+    "version": 1
+}
