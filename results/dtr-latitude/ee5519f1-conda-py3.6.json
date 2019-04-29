@@ -1,0 +1,297 @@
+{
+    "benchmark_version": {
+        "kernel.Core.time_fields": "9be232ac9c6b5696e9fec9fb09f1d9a2ba7639849e4a07d76d42d777b26d66ea",
+        "kernel.Core.time_greenfct": "dca26b279d66ac8a32955612fddb0d38f76ef1ed0814a56fd05973a542acc1e8",
+        "kernel.Core.time_reflections": "239064ab009f66b1913593d27c78eee907104f64fa25de2444fd3234934e99da",
+        "kernel.Core.time_wavenumber": "3303b05345caaab9a6e76f49b275c81c6500f534994a16873766dda00b8a57ae",
+        "model.Analytical.time_analytical": "b07b2319ed2d72709b609713b1ba9e4ab118e013c11069916485523a4d57c64a",
+        "model.Bipole.time_bipole_freq": "414d97927480f2926fc51bd7f1310f10bf90c288c52c05ca8ed06adda5325700",
+        "model.Bipole.time_bipole_time": "92ab32d881b945c9282007684024d61cccfc76b36236d9fe6f2e14a06febb400",
+        "model.Dipole.time_dipole_freq": "e4363dd7ed9f2b6c5b5ba91c923d79ba7eefb784db2870554311ff91e6460399",
+        "model.Dipole.time_dipole_time": "9e6f664a0f8d1e3a7fe52ea00d9f49935e66a4b3eb8b1077d8b42e3482fe5a7f",
+        "model.Various.time_dipole_difflsrclrec_42": "a5c9439610c9ccd50ffcd444fe9d16b1f1e34705df092690f7a0ebcf6eedf7a3",
+        "model.Various.time_dipole_highfreq_11": "a2d217ae72706761592e79197d36a97ea195dbb96120794075dd014c898b2893",
+        "model.Various.time_dipole_land_angle_16": "3825aabf9a84187d839b65f948f34e9b74ddab54c35ae11f3597a4f27e34a99a",
+        "model.Various.time_dipole_marine_angle_12": "3fb21cf634bd44e5daf61b7e681e9381368bc5f78d1f43420d6322cac474e14a",
+        "transform.Dlf.time_dlf": "8e6e807b7e399969c112f72a58832de04e91c71dc642fe0371a447b07c835d37",
+        "transform.Fourier.time_ffht_lagged": "1f69fde3570c0a29bc57ef582ab952afe56497d4b60f04c196f527e30ae89806",
+        "transform.Fourier.time_ffht_splined": "31314e2e50c80e933f36336e7d058c98d332b604dbb1a9e8dc5a954bd9ca2935",
+        "transform.Fourier.time_ffht_standard": "cedc67153c6bafc488226e68c8ab05b2180314fea7143efcb9a60273ef1d4995",
+        "transform.Fourier.time_fft": "13717ca1533431ce1f675f0d5d1b4489acfc4a87505f76b9241a3e3e68ecd7cb",
+        "transform.Fourier.time_fftlog": "05a4e1b3b78bd344d7ccf9b20e3ac9988df5ec3a9c0310926d25fbcd6b1c147a",
+        "transform.Fourier.time_fqwe": "f3b657bf372da3fc096e083370592e955c5a3df5aeb5733c7ffa328942a5d33e",
+        "transform.Hankel.time_fht_lagged": "8c1f9a55dc379362fa68513246a40599969bd10575578ed9d0e0345bca94b5ab",
+        "transform.Hankel.time_fht_splined": "5cd366a5fbd39289cc1e8a9071ec1e4752299a0ceef9e87489d51620a0cd395c",
+        "transform.Hankel.time_fht_standard": "d4bf70c394a351372343cc38203adfeae8035ffb06c4488c0eab22c72e314dca",
+        "transform.Hankel.time_hquad": "b83cdbbdf238db94cd3be91f137ffcd7e11e86560afed68f17fbc85fcf644beb",
+        "transform.Hankel.time_hqwe_splined": "64051c18cf65b842feee1d990a14d5ab0f721fdb25d5c2ebe40991ed6f689d63",
+        "transform.Hankel.time_hqwe_standard": "b7455eb596074443a59d085ce99e73c4c26e03c65c298bb957b5e044c1e14986"
+    },
+    "commit_hash": "ee5519f13d507ad23dd7498b90759a33c66c609d",
+    "date": 1484413868000,
+    "ended_at": {
+        "kernel.Core.time_fields": 1556502000420,
+        "kernel.Core.time_greenfct": 1556502000421,
+        "kernel.Core.time_reflections": 1556502000422,
+        "kernel.Core.time_wavenumber": 1556502000422,
+        "model.Analytical.time_analytical": 1556502000583,
+        "model.Bipole.time_bipole_freq": 1556502000637,
+        "model.Bipole.time_bipole_time": 1556502000692,
+        "model.Dipole.time_dipole_freq": 1556502000856,
+        "model.Dipole.time_dipole_time": 1556502001019,
+        "model.Various.time_dipole_difflsrclrec_42": 1556502001073,
+        "model.Various.time_dipole_highfreq_11": 1556502001128,
+        "model.Various.time_dipole_land_angle_16": 1556502001183,
+        "model.Various.time_dipole_marine_angle_12": 1556502001237,
+        "transform.Dlf.time_dlf": 1556502002051,
+        "transform.Fourier.time_ffht_lagged": 1556502002178,
+        "transform.Fourier.time_ffht_splined": 1556502002179,
+        "transform.Fourier.time_ffht_standard": 1556502002180,
+        "transform.Fourier.time_fft": 1556502002181,
+        "transform.Fourier.time_fftlog": 1556502002182,
+        "transform.Fourier.time_fqwe": 1556502002183,
+        "transform.Hankel.time_fht_lagged": 1556502001346,
+        "transform.Hankel.time_fht_splined": 1556502001456,
+        "transform.Hankel.time_fht_standard": 1556502001564,
+        "transform.Hankel.time_hquad": 1556502001673,
+        "transform.Hankel.time_hqwe_splined": 1556502001782,
+        "transform.Hankel.time_hqwe_standard": 1556502001891
+    },
+    "env_name": "conda-py3.6",
+    "params": {
+        "arch": "x86_64",
+        "cpu": "Intel(R) Core(TM) i7-6600U CPU @ 2.60GHz",
+        "machine": "dtr-latitude",
+        "os": "Linux 4.15.0-47-generic",
+        "python": "3.6",
+        "ram": "16069588"
+    },
+    "profiles": {},
+    "python": "3.6",
+    "requirements": {},
+    "results": {
+        "kernel.Core.time_fields": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        },
+        "kernel.Core.time_greenfct": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        },
+        "kernel.Core.time_reflections": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        },
+        "kernel.Core.time_wavenumber": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        },
+        "model.Analytical.time_analytical": {
+            "params": [
+                [
+                    "'fs'",
+                    "'dhs'",
+                    "'dfs'"
+                ]
+            ],
+            "result": null
+        },
+        "model.Bipole.time_bipole_freq": null,
+        "model.Bipole.time_bipole_time": null,
+        "model.Dipole.time_dipole_freq": {
+            "params": [
+                [
+                    "None",
+                    "'freq'",
+                    "'off'"
+                ]
+            ],
+            "result": null
+        },
+        "model.Dipole.time_dipole_time": {
+            "params": [
+                [
+                    "None",
+                    "'freq'",
+                    "'off'"
+                ]
+            ],
+            "result": null
+        },
+        "model.Various.time_dipole_difflsrclrec_42": null,
+        "model.Various.time_dipole_highfreq_11": null,
+        "model.Various.time_dipole_land_angle_16": null,
+        "model.Various.time_dipole_marine_angle_12": null,
+        "transform.Dlf.time_dlf": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ],
+                [
+                    "'Standard'",
+                    "'Lagged'",
+                    "'Splined'"
+                ]
+            ],
+            "result": null
+        },
+        "transform.Fourier.time_ffht_lagged": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        },
+        "transform.Fourier.time_ffht_splined": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        },
+        "transform.Fourier.time_ffht_standard": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        },
+        "transform.Fourier.time_fft": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        },
+        "transform.Fourier.time_fftlog": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        },
+        "transform.Fourier.time_fqwe": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        },
+        "transform.Hankel.time_fht_lagged": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        },
+        "transform.Hankel.time_fht_splined": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        },
+        "transform.Hankel.time_fht_standard": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        },
+        "transform.Hankel.time_hquad": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        },
+        "transform.Hankel.time_hqwe_splined": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        },
+        "transform.Hankel.time_hqwe_standard": {
+            "params": [
+                [
+                    "'Small'",
+                    "'Big'"
+                ]
+            ],
+            "result": null
+        }
+    },
+    "started_at": {
+        "kernel.Core.time_fields": 1556502000301,
+        "kernel.Core.time_greenfct": 1556502000420,
+        "kernel.Core.time_reflections": 1556502000421,
+        "kernel.Core.time_wavenumber": 1556502000422,
+        "model.Analytical.time_analytical": 1556502000422,
+        "model.Bipole.time_bipole_freq": 1556502000583,
+        "model.Bipole.time_bipole_time": 1556502000638,
+        "model.Dipole.time_dipole_freq": 1556502000692,
+        "model.Dipole.time_dipole_time": 1556502000856,
+        "model.Various.time_dipole_difflsrclrec_42": 1556502001019,
+        "model.Various.time_dipole_highfreq_11": 1556502001074,
+        "model.Various.time_dipole_land_angle_16": 1556502001128,
+        "model.Various.time_dipole_marine_angle_12": 1556502001183,
+        "transform.Dlf.time_dlf": 1556502001891,
+        "transform.Fourier.time_ffht_lagged": 1556502002051,
+        "transform.Fourier.time_ffht_splined": 1556502002178,
+        "transform.Fourier.time_ffht_standard": 1556502002179,
+        "transform.Fourier.time_fft": 1556502002180,
+        "transform.Fourier.time_fftlog": 1556502002181,
+        "transform.Fourier.time_fqwe": 1556502002182,
+        "transform.Hankel.time_fht_lagged": 1556502001237,
+        "transform.Hankel.time_fht_splined": 1556502001346,
+        "transform.Hankel.time_fht_standard": 1556502001456,
+        "transform.Hankel.time_hquad": 1556502001565,
+        "transform.Hankel.time_hqwe_splined": 1556502001673,
+        "transform.Hankel.time_hqwe_standard": 1556502001782
+    },
+    "version": 1
+}
