@@ -34,7 +34,7 @@
         "kernel.Core.time_greenfct": 1556485697161,
         "kernel.Core.time_reflections": 1556485701383,
         "kernel.Core.time_wavenumber": 1556485715374,
-        "model.Analytical.time_analytical": 1556485715711,
+        "model.Analytical.time_analytical": 1556549650033,
         "model.Bipole.time_bipole_freq": 1556485722251,
         "model.Bipole.time_bipole_time": 1556485725812,
         "model.Dipole.time_dipole_freq": 1556485728776,
@@ -43,10 +43,10 @@
         "model.Various.time_dipole_highfreq_11": 1556485735617,
         "model.Various.time_dipole_land_angle_16": 1556485735821,
         "model.Various.time_dipole_marine_angle_12": 1556485736024,
-        "transform.Dlf.time_dlf": 1556485670206,
+        "transform.Dlf.time_dlf": 1556549645369,
         "transform.Fourier.time_ffht_lagged": 1556485754434,
         "transform.Fourier.time_ffht_splined": 1556485754845,
-        "transform.Fourier.time_ffht_standard": 1556485675332,
+        "transform.Fourier.time_ffht_standard": 1556549649718,
         "transform.Fourier.time_fft": 1556485755265,
         "transform.Fourier.time_fftlog": 1556485755679,
         "transform.Fourier.time_fqwe": 1556485757794,
@@ -247,24 +247,24 @@
                 ]
             ],
             "result": [
-                0.004091003333333334,
+                0.003976545499999998,
                 null,
                 null
             ],
             "stats": [
                 {
                     "ci_99": [
-                        0.003956635999999995,
-                        0.004229268333333337
+                        0.0039221069999999985,
+                        0.004236718000000005
                     ],
-                    "max": 0.004229268333333337,
-                    "mean": 0.004086811966666667,
-                    "min": 0.003956635999999995,
+                    "max": 0.004236718000000005,
+                    "mean": 0.003988045266666665,
+                    "min": 0.0039221069999999985,
                     "number": 3,
-                    "q_25": 0.003967914416666665,
-                    "q_75": 0.004199210333333332,
+                    "q_25": 0.003929269749999996,
+                    "q_75": 0.003990215999999997,
                     "repeat": 10,
-                    "std": 0.00011703969303573507
+                    "std": 8.797894210369232e-05
                 },
                 null,
                 null
@@ -1003,7 +1003,7 @@
         "kernel.Core.time_greenfct": 1556485683825,
         "kernel.Core.time_reflections": 1556485697168,
         "kernel.Core.time_wavenumber": 1556485701388,
-        "model.Analytical.time_analytical": 1556485715402,
+        "model.Analytical.time_analytical": 1556549649719,
         "model.Bipole.time_bipole_freq": 1556485715733,
         "model.Bipole.time_bipole_time": 1556485722251,
         "model.Dipole.time_dipole_freq": 1556485725812,
@@ -1012,10 +1012,10 @@
         "model.Various.time_dipole_highfreq_11": 1556485735113,
         "model.Various.time_dipole_land_angle_16": 1556485735617,
         "model.Various.time_dipole_marine_angle_12": 1556485735821,
-        "transform.Dlf.time_dlf": 1556485669670,
+        "transform.Dlf.time_dlf": 1556549644802,
         "transform.Fourier.time_ffht_lagged": 1556485754028,
         "transform.Fourier.time_ffht_splined": 1556485754440,
-        "transform.Fourier.time_ffht_standard": 1556485675225,
+        "transform.Fourier.time_ffht_standard": 1556549645369,
         "transform.Fourier.time_fft": 1556485754859,
         "transform.Fourier.time_fftlog": 1556485755272,
         "transform.Fourier.time_fqwe": 1556485755686,
